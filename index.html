@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>rsvisualization</title>
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css" rel="stylesheet" />
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-api-0.12.4.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <v-mapbox
+        access-token="pk.eyJ1IjoibWlzY2hhaiIsImEiOiJjajVkdmRsNm0wbXhlMndyeXR4Z2RqbDEzIn0.uiastRxuHdehm_hwLZiWKg"
+        map-style="mapbox://styles/mapbox/satellite-streets-v10"
+        :center="[5.1,53.1]"
+        :zoom="10"
+        :pitch="38.50"
+        :bearing="1.43"
+        :min-zoom="5"
+        id="map"
+        ref="map"
+        >
+        <v-mapbox-source
+                  :options="source"
+                  v-for="source in sources"
+                  :key="source.id" slot="sources"></v-mapbox-source>
+        <v-mapbox-layer
+                  :options="layer"
+                  v-for="layer in layers"
+                  :key="layer.id" slot="layers"></v-mapbox-layer>
+        <v-mapbox-geocoder></v-mapbox-geocoder>
+        <v-mapbox-navigation-control></v-mapbox-navigation-control>
+      </v-mapbox>
+      <v-card id="menu" class="elevation-10">
+        <v-list two-line>
+          <v-subheader>
+            Context
+          </v-subheader>
+        </v-subheader>
+          <v-list-item v-for="layer in layers" :key="layer.id"  v-if="!layer.metadata.hidden">
+            <v-list-tile avatar>
+              <v-list-tile-action >
+                <v-switch v-model="layer.active" />
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ layer.metadata.name }}</v-list-tile-title>
+                <v-list-tile-sub-title>{{ layer.metadata.subtitle }} </v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-avatar>
+                <img :src="'static/images/' + layer.metadata.avatar" />
+              </v-list-tile-avatar>
+            </v-list-tile>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item>
+            <label class='slider' id='timestep'>tijdstip: 0</label>
+            <input
+              v-model=timeStep
+              class='slider'
+              id='slider'
+              type='range'
+              min='-2'
+              max='0'
+              step='1'
+              value='0'
+             />
+          </v-list-item>
+          <v-list-item>
+            <div class='bar'></div>
+            <div class='bartext'>  -10 -8 -6 -4 -2 0 <span> </span> </div>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </div>
+  </body>
+</html>

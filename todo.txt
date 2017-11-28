@@ -1,0 +1,5 @@
+verschillende volgorde: bewerkte resultaat als laatste
+tijdslider: 0 = nu
+gapfilling en dineof zijn bewerkingen (kopje)
+klein Deltares-logo
+composiet (gemiddelde van meerdere dagen opleveren)
