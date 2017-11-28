@@ -30,6 +30,7 @@ import "./main.scss";
 import mapboxgl from 'mapbox-gl';
 
 var toonRuweInput = false;
+var toonResultaat = false;
 
 Vue.component('modal', {
   template: '#modal-template'
@@ -114,7 +115,7 @@ const vm = new Vue({
 */
         {
           "id": "resultaat-0",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat-0",
@@ -141,7 +142,8 @@ const vm = new Vue({
           "metadata": {
             "name": "ruwe input",
             "subtitle": "onbewerkte input-1",
-            "avatar": "grid.png"
+            "avatar": "grid.png",
+            "hidden": true
           },
           "type": "raster",
           "source": {
@@ -208,11 +210,12 @@ const vm = new Vue({
 */
         {
           "id": "resultaat-1",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat-1",
-            "avatar": "grid.png"
+            "avatar": "grid.png",
+            "hidden": true
           },
           "type": "raster",
           "source": {
@@ -235,7 +238,8 @@ const vm = new Vue({
           "metadata": {
             "name": "ruwe input",
             "subtitle": "onbewerkte input-2",
-            "avatar": "grid.png"
+            "avatar": "grid.png",
+            "hidden": true
           },
           "type": "raster",
           "source": {
@@ -302,11 +306,12 @@ const vm = new Vue({
 */
         {
           "id": "resultaat-2",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat-2",
-            "avatar": "grid.png"
+            "avatar": "grid.png",
+            "hidden": true
           },
           "type": "raster",
           "source": {
@@ -395,7 +400,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-3",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -487,7 +492,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-4",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -579,7 +584,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-5",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -671,7 +676,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-6",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -763,7 +768,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-7",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -855,7 +860,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-8",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -947,7 +952,7 @@ const vm = new Vue({
         },
         {
           "id": "resultaat-9",
-          "active": true,
+          "active": false,
           "metadata": {
             "name": "resultaat",
             "subtitle": "eindresultaat",
@@ -985,7 +990,7 @@ components: {
       this.$refs.map.map.on(
         "load",
         () => {
-        this.syncLayerVisibility();
+//        this.syncLayerVisibility();
         document.getElementById('slider').addEventListener('input', function(e) {
                 var t = parseInt(e.target.value, 10);
                 document.getElementById('timestep').textContent = 'tijdstip: ' + t.toString();
@@ -1000,14 +1005,15 @@ components: {
     }
   },
   methods: {
-    setLayerImages(event) {
+    setLayerImages() {
       var index = document.getElementById('slider').value;
 //      console.log("in setlayerimages, index = " + index);
       _.each(this.layers, (layer) => {
 //        console.log("layer wijzigen: " + layer.id + "   index = " + index)
         if (layer.id.endsWith(index)) {
 //            console.log("yo: " + index);
-            if (layer.id.startsWith("ruwe_input") && toonRuweInput == true) {
+            if ((layer.id.startsWith("ruwe_input") && toonRuweInput) ||
+                (layer.id.startsWith("resultaat") && toonResultaat)){
                 layer.active = true;
             }
             else {
@@ -1023,22 +1029,36 @@ components: {
       vm.syncLayerVisibility();
     },
     syncLayerVisibility() {
+      var firstChange = true;
       _.each(this.layers, (layer) => {
       if (layer.metadata.hidden == false)
       {
         if (layer.active) {
           this.$refs.map.map.setLayoutProperty(layer.id, "visibility", "visible");
-          if (layer.id.startsWith("ruwe_input")) {
-              console.log("toonRuweInput = true");
+          if (layer.id.startsWith("ruwe_input") && firstChange && !toonRuweInput) {
+//              console.log("ruweinput = true");
               toonRuweInput = true;
+              firstChange = false;
+          }
+          if (layer.id.startsWith("resultaat") && firstChange && !toonResultaat) {
+              toonResultaat = true;
+              firstChange = false;
           }
         } else {
           this.$refs.map.map.setLayoutProperty(layer.id, "visibility", "none");
-          if (layer.id.startsWith("ruwe_input")) {
-              console.log("toonRuweInput = false");
+          if (layer.id.startsWith("ruwe_input") && firstChange && toonRuweInput) {
+//              console.log("ruweinput = false");
               toonRuweInput = false;
+              firstChange = false;
+          }
+          if (layer.id.startsWith("resultaat") && firstChange && toonResultaat) {
+              toonResultaat = false;
+              firstChange = false;
           }
         }
+      }
+      else {
+          this.$refs.map.map.setLayoutProperty(layer.id, "visibility", "none");
       }
       });
     }
@@ -1047,7 +1067,7 @@ components: {
 // add watchers that are deep
 vm.$watch(
   "layers",
-  function(layers) {
+  function() {
     vm.syncLayerVisibility();
   },
   {deep: true}
