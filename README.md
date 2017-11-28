@@ -1,6 +1,6 @@
 # rsvisualization
 
-> Mapbox visualization for Remote Sensing data
+> Mapbox visualization for Gap-Filled Remote Sensing data (using a Genetic Algorithm)
 
 ## Build Setup
 
