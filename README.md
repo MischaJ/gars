@@ -1,4 +1,4 @@
-# rsvisualization
+# Gars
 
 > Mapbox visualization for Gap-Filled Remote Sensing data (using a Genetic Algorithm)
 
