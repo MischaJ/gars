@@ -5,6 +5,23 @@
 ## Build Setup
 
 ``` bash
+mkdir <folder>
+cd <folder> 
+npm install –g vue-cli
+vue init webpack <my-project>
+               Project name
+               Project description
+               Author
+               Vue build  runtime + compiler
+               Install vue-router  no (only when building webpage with multiple pages in same frame)
+               Use ESLine to lint your code  yes (do syntax checks)
+               Pick an ESLint preset  none
+               Setup unit test with Karma + Mocha  yes
+               Setup e2e tests  Yes
+npm install
+yarn install 
+
+
 # install dependencies
 npm install
 
